@@ -1,23 +1,41 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import ChildComponent from './Components/childComponent';
+
 
 function App() {
+  const [children, setChildren] = useState([]);
+
+  const addChild = (orientation) => {
+    const newChild = { id: Date.now(), orientation, children: [] };
+    setChildren([...children, newChild]);
+  };
+
+  const updateChildren = (updatedChild) => {
+    const updatedChildren = children.map((child) =>
+      child.id === updatedChild.id ? updatedChild : child
+    );
+    setChildren(updatedChildren);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="initial-buttons">
+        <button onClick={() => addChild('horizontal')}>Horizontal</button>
+        <button onClick={() => addChild('vertical')}>Vertical</button>
+        {
+          children.length > 0 && <div className="children-container">
+            {children.map((child) => (
+              <ChildComponent
+                key={child.id}
+                component={child}
+                updateParent={updateChildren}
+              />
+            ))}
+          </div>
+        }
+      </div>
+
     </div>
   );
 }
